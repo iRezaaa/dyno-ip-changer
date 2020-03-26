@@ -50,10 +50,12 @@ func main() {
 	var checkDomainName string
 	var apiKey string
 	var port int
+	var checkInterval int
 
 	flag.StringVar(&checkDomainName, "domain", "", "check domain name to change ip address if blocked!")
 	flag.StringVar(&apiKey, "apikey", "", "dynu api key, check : https://www.dynu.com/ControlPanel/APICredentials")
 	flag.IntVar(&port, "port", 0, "your port to check")
+	flag.IntVar(&checkInterval, "interval", 30, "check domain ip is blocked time in seconds")
 	flag.Parse()
 
 	if checkDomainName == "" {
@@ -79,7 +81,7 @@ func main() {
 		if !connected {
 			fmt.Println("Check your internet connection, this application can't work without internet connection.")
 			fmt.Println("------------------------------------------------")
-			time.Sleep(30 * time.Second)
+			time.Sleep(time.Duration(checkInterval) * time.Second)
 			continue
 		}
 
@@ -89,7 +91,7 @@ func main() {
 		if err != nil {
 			handleError(GetDomainList, err)
 			fmt.Println("------------------------------------------------")
-			time.Sleep(30 * time.Second)
+			time.Sleep(time.Duration(checkInterval) * time.Second)
 			continue
 		}
 
@@ -140,13 +142,13 @@ func main() {
 			} else {
 				fmt.Println("Check your internet connection, this application can't work without internet connection.")
 				fmt.Println("------------------------------------------------")
-				time.Sleep(30 * time.Second)
+				time.Sleep(time.Duration(checkInterval) * time.Second)
 			}
 		} else {
 			fmt.Println(fmt.Sprintf("Everything is ok! your ip : %s not blocked", domain.IpV4Address))
 		}
 
 		fmt.Println("------------------------------------------------")
-		time.Sleep(30 * time.Second)
+		time.Sleep(time.Duration(checkInterval) * time.Second)
 	}
 }
